@@ -16,32 +16,31 @@ To implement interprocess communication using pipe command.
 ## PROGRAM:
 
 ```
+
 #include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
-int main() {
-    int p[2], pid, pid1;
-    char msg[25], msg1[25];
-    pipe(p);
-    pid = fork();
-    if (pid != 0) {
-        sleep(2);
-        read(p[0], msg1, 21);
-        printf("%s\n", msg1);
-    } else {
-        pid1 = fork();
-        if (pid1 != 0) {
-            sleep(1);
-            char message[] = "Grand child says hello";
-            write(p[1], message, strlen(message) + 1); 
-        } else {
-            char message[] = "Says hello to grandpa";
-            write(p[1], message, strlen(message) + 1); 
-    }
-    return 0;
+int main()
+{
+
+  int fd[2],child; char a[10];
+  printf("\nEnter the string : ");
+  scanf("%s",a);
+  pipe(fd);
+  child=fork();
+  if(!child)
+{
+    close(fd[0]);
+    write(fd[1],a,5); wait(0);
 }
 
+  else
+
+{
+   close(fd[1]);
+    read(fd[0],a,5); printf("The string received from pipe is : %s",a);
+}
+
+return 0;
+}
 ```
 
 ## OUTPUT:
